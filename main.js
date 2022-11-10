@@ -1,50 +1,95 @@
-const buttons = document.querySelectorAll("button");
-const paperBtn = document.querySelector("button .paper");
-const rockBtn = document.querySelector("button .rock");
-const scissorsBtn = document.querySelector("button .scissors");
+const options = document.querySelector(".options");
+const paperBtn = document.querySelector("button.paper");
+const rockBtn = document.querySelector("button.rock");
+const scissorsBtn = document.querySelector("button.scissors");
 const resultDisplay = document.querySelector(".result");
-const mickeyChoice = document.querySelector(".mickey-choice");
 
 const choices = ["rock", "paper", "scissors"];
-let userChoice;
+let userChoice = "";
 
-console.log(choices[0]);
-
-//USER CHOICE:
-userChoice = choices[0]
-
-
-
-
-//RANDOM CHOICE GENERATOR AND MICKEY'S CHOICE
 const randomChoice = choices[Math.floor(Math.random() * choices.length)];
-mickeyChoice.innerHTML = "Mickey chose: " + randomChoice;
-console.log("Wybór Mickiego: " + randomChoice);
 
-//CREATING MICKEY'S CHOICE BUTTON & IMAGE:
-const mickeyBtnChoice = document.querySelector(".mickey-choice-button");
-
-const showImage = () => {
+//RANDOM CHOICE GENERATOR AND CREATING MICKEY'S CHOICE BUTTON
+let showMickeyChoice = (randomChoice) => {
+	const mickeyBtnChoice = document.createElement("button");
+	options.appendChild(mickeyBtnChoice);
 	mickeyBtnChoice.classList.add(randomChoice);
+
+	if (mickeyBtnChoice.classList.contains("rock")) {
+		mickeyBtnChoice.innerHTML = '<img src="./img/rock.png" alt="rock"> ROCK';
+	} else if (mickeyBtnChoice.classList.contains("paper")) {
+		mickeyBtnChoice.innerHTML = '<img src="./img/paper.png" alt="paper"> PAPER';
+	} else if (mickeyBtnChoice.classList.contains("scissors")) {
+		mickeyBtnChoice.innerHTML =
+			'<img src="./img/scissors.png" alt="scissors"> SCISSORS';
+	}
 };
 
-//cos tu nie działa:
-if (mickeyBtnChoice.classList.contains(rock)) {
-	mickeyBtnChoice.innerHTML = '<img src="./img/rock.png" alt="rock">';
-} else if (mickeyBtnChoice.classList.contains(paper)) {
-	mickeyBtnChoice.innerHTML = '<img src="./img/paper.png" alt="paper">';
-} else if (mickeyBtnChoice.classList.contains(scissors)) {
-	mickeyBtnChoice.innerHTML = '<img src="./img/scissors.png" alt="scissors">';
-} else {
-	mickeyBtnChoice.innerHTML = "no kurwo działaj";
-}
+//USER CHOICE:
+const rockChosen = () => {
+	document.getElementById("rock");
+	userChoice = choices[0];
+	options.removeChild(paperBtn);
+	options.removeChild(scissorsBtn);
+	getResults(userChoice, randomChoice, showMickeyChoice(randomChoice));
+};
 
-//mickeyBtnChoice.addEventListener("click", userChoice)
-console.log(randomChoice);
+const paperChosen = () => {
+	document.getElementById("paper");
+	userChoice = choices[1];
+	options.removeChild(rockBtn);
+	options.removeChild(scissorsBtn);
+	getResults(userChoice, randomChoice, showMickeyChoice(randomChoice));
+};
 
-//const getResult() {resultDisplay.innerHTML = 'chujemuje'}
+const scissorsChosen = () => {
+	document.getElementById("scissors");
+	userChoice = choices[2];
+	options.removeChild(paperBtn);
+	options.removeChild(rockBtn);
+	getResults(userChoice, randomChoice, showMickeyChoice(randomChoice));
+};
 
-//buttons.addEventListener("click", getResult)
+//RESULTS DISPLAY:
+const getResults = (userChoice, randomChoice) => {
+	if (
+		(userChoice === "rock" && randomChoice === "scissors") ||
+		(userChoice === "scissors" && randomChoice === "paper") ||
+		(userChoice === "paper" && randomChoice === "rock")
+	) {
+		resultDisplay.innerHTML =
+			"You chose " +
+			userChoice +
+			" and Mickey chose " +
+			randomChoice +
+			", YOU WIN!";
+	} else if (
+		(userChoice === "scissors" && randomChoice === "rock") ||
+		(userChoice === "paper" && randomChoice === "scissors") ||
+		(userChoice === "rock" && randomChoice === "paper")
+	) {
+		resultDisplay.innerHTML =
+			"You chose " +
+			userChoice +
+			" and Mickey chose " +
+			randomChoice +
+			", YOU LOSE!";
+	} else {
+		resultDisplay.innerHTML =
+			"You chose " +
+			userChoice +
+			" and Mickey chose " +
+			randomChoice +
+			", IT'S A DRAW!";
+	}
+};
 
-resultDisplay.innerHTML = "MICKEY CHOSE: " + randomChoice.toUpperCase() + " & YOU CHOSE: " + userChoice.toUpperCase() + "..."
+//GAME OVER:
+const resetGame = document.getElementById('reset-game')
+resetGame.addEventListener("click", () => {
+	window.location.reload()
+})
 
+rockBtn.addEventListener("click", rockChosen);
+paperBtn.addEventListener("click", paperChosen);
+scissorsBtn.addEventListener("click", scissorsChosen);
